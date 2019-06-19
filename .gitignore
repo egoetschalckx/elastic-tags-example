@@ -1,0 +1,29 @@
+### Java ###
+*.class
+build
+bin
+out
+
+### Maven ###
+target/
+pom.xml.*
+dependency-reduced-pom.xml
+
+### Intellij ###
+.idea/
+*.iml
+.idea_modules/
+
+### Visual Studio Code ###
+.vscode
+.history
+
+### Eclipse ###
+.settings
+.project
+.classpath
+.factorypath
+.sts4-cache
+
+### Gradle ###
+.gradle

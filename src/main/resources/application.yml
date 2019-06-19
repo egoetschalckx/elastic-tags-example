@@ -1,0 +1,14 @@
+# Logging Properties
+logging:
+  level:
+    root: info
+    org.springframework.boot: info
+    org.springframework.data: info
+    com.ncr.tdm.search: info
+
+# Spring Properties
+spring:
+  data:
+    elasticsearch:
+      cluster-name: elasticsearch
+      cluster-nodes: localhost:9300
