@@ -2,18 +2,22 @@ package com.goetschalckx.elastic.example;
 
 
 import com.goetschalckx.elastic.example.data.Site;
-import com.goetschalckx.elastic.example.repo.GroupRepository;
 import com.goetschalckx.elastic.example.repo.SiteRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.Banner;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.elasticsearch.repository.config.EnableElasticsearchRepositories;
+import springfox.documentation.builders.PathSelectors;
+import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.spi.DocumentationType;
+import springfox.documentation.spring.web.plugins.Docket;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @SpringBootApplication
 @EnableElasticsearchRepositories(basePackages = "com.goetschalckx.elastic.example")
+@EnableSwagger2
 public class Application {
 
     public static void main(String[] args) {
@@ -24,28 +28,12 @@ public class Application {
     }
 
     @Bean
-    public Page<Site> doStuff(SiteRepository siteRepository) {
-        Page<Site> sitePage = (Page<Site>) siteRepository.findAll();
-
-        return sitePage;
-    }
-
-    @Bean
-    public 
-
-    //@Bean
-    public String dooStuf(
-            SiteRepository siteRepository,
-            GroupRepository groupRepository
-    ) {
-        Site site1 = Site.builder().name("Pharmacy").build();
-        Site site2 = Site.builder().name("Pharm").build();
-        Site site3 = Site.builder().name("PHARM").build();
-        siteRepository.save(site1);
-        siteRepository.save(site2);
-        siteRepository.save(site3);
-
-        return "";
+    public Docket api() {
+        return new Docket(DocumentationType.SWAGGER_2)
+                .select()
+                .apis(RequestHandlerSelectors.any())
+                .paths(PathSelectors.any())
+                .build();
     }
 
 }

@@ -3,16 +3,15 @@ package com.goetschalckx.elastic.example.data;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Document(indexName = "group", type = "groups")
-public class Group {
+@Document(indexName = "org", type = "orgs")
+public class Org {
 
-    @Id
-    private String name;
+    String org;
+    String group;
 
 }

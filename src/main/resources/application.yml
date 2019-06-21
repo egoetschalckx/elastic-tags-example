@@ -1,10 +1,15 @@
 # Logging Properties
 logging:
+  web:
+    enabled: true
+    include-body: true
+
   level:
     root: info
     org.springframework.boot: info
     org.springframework.data: info
     com.ncr.tdm.search: info
+    com.goetschalckx.spring.http.logging: debug
 
 # Spring Properties
 spring:
