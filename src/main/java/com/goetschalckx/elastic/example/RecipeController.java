@@ -4,11 +4,11 @@ import com.github.javafaker.Faker;
 import com.goetschalckx.elastic.example.collectors.MoreCollectors;
 import com.goetschalckx.elastic.example.data.CountSort;
 import com.goetschalckx.elastic.example.data.CountTagsResponse;
-import com.goetschalckx.elastic.example.data.GetRecipesPageRequest;
-import com.goetschalckx.elastic.example.data.GetRecipesPageResponse;
+import com.goetschalckx.elastic.example.recipe.GetRecipesPageRequest;
+import com.goetschalckx.elastic.example.recipe.GetRecipesPageResponse;
 import com.goetschalckx.elastic.example.data.GetTagCountRequest;
-import com.goetschalckx.elastic.example.data.Recipe;
-import com.goetschalckx.elastic.example.repo.RecipeRepository;
+import com.goetschalckx.elastic.example.recipe.Recipe;
+import com.goetschalckx.elastic.example.recipe.RecipeRepository;
 import com.google.common.base.Strings;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.action.search.SearchResponse;
@@ -38,7 +38,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,6 +56,17 @@ import static org.elasticsearch.script.Script.DEFAULT_SCRIPT_LANG;
 public class RecipeController {
 
     private static final Faker FAKER = new Faker();
+    private static final String[] partners = new String[] {
+            null,
+            null,
+            null,
+            null,
+            "DoorDash",
+            "GruhHub",
+            "UberEats",
+            "Postmates",
+            "Ziftys"
+    };
 
     private final RecipeRepository recipeRepository;
     private final ElasticsearchTemplate template;
@@ -82,10 +96,19 @@ public class RecipeController {
         tags.add(spice);
         tags.add(dish);
 
+        // [eg] whoa
+        isPartner().ifPresent(tags::add);
+
+        OffsetDateTime now = OffsetDateTime.now();
+
+        Date date = Date.from(now.toInstant());
+
         Recipe randRecipe = Recipe.builder()
                 .id(id)
                 .name(name)
                 .tags(tags.toArray(new String[0]))
+                //.dateCreated(date)
+                //.dateUpdated(date)
                 .build();
 
         return recipeRepository.save(randRecipe);
@@ -116,7 +139,6 @@ public class RecipeController {
 
         // multi-tenancy here
         //boolQueryBuilder.must(QueryBuilders.termQuery("org.keyword", "my-org"));
-
         List<String> tags = request.getTags();
         if (tags != null && !tags.isEmpty()) {
             for (String tag : request.getTags()) {
@@ -153,7 +175,8 @@ public class RecipeController {
             }
         }
 
-        return fromPage(recipeRepository.search(boolQueryBuilder, pageRequest));
+        Page<Recipe> search = recipeRepository.search(boolQueryBuilder, pageRequest);
+        return fromPage(search);
     }
 
     @DeleteMapping("{recipeId}/tags/{tagName}")
@@ -212,7 +235,7 @@ public class RecipeController {
         template.update(updateQuery);
     }
 
-    @GetMapping("tagcount")
+    @GetMapping("tagcounts")
     public CountTagsResponse countTags(
             @Valid GetTagCountRequest request
     ) {
@@ -292,6 +315,37 @@ public class RecipeController {
                 .build();
     }
 
+    @GetMapping("tagcounts/{tagName}")
+    public CountTagsResponse countTags(
+            @PathVariable String tagName
+    ) {
+        // [eg] i bet there's a better to do this, maybe with the repo...
+        NativeSearchQueryBuilder searchQueryBuilder = new NativeSearchQueryBuilder()
+                .withIndices("recipe")
+                .withTypes("recipe")
+
+                // we just want the count
+                .withPageable(PageRequest.of(0, 1));
+
+        if (!Strings.isNullOrEmpty(tagName)) {
+            final QueryBuilder queryBuilder = tagName.contains("*") ?
+                    QueryBuilders.wildcardQuery("tags.keyword", tagName)
+                    :
+                    QueryBuilders.termQuery("tags.keyword", tagName);
+
+            searchQueryBuilder.withQuery(queryBuilder);
+        }
+
+        Long count = template.query(
+                searchQueryBuilder.build(),
+                x -> x.getHits().totalHits);
+
+        // [eg] i use the same response as the search because im not a monster
+        return CountTagsResponse.builder()
+                .counts(Collections.singletonMap(tagName, count))
+                .build();
+    }
+
     private BucketOrder getBucketOrder(GetTagCountRequest request) {
         CountSort sort = request.getSort();
 
@@ -320,6 +374,11 @@ public class RecipeController {
                 .totalPages(page.getTotalPages())
                 .totalResults(page.getTotalElements())
                 .build();
+    }
+
+    private Optional<String> isPartner() {
+        String option = FAKER.options().option(partners);
+        return Optional.ofNullable(option);
     }
 
 }

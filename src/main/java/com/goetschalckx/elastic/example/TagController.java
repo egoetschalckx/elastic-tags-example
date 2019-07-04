@@ -1,6 +1,6 @@
 package com.goetschalckx.elastic.example;
 
-import com.goetschalckx.elastic.example.data.Tag;
+import com.goetschalckx.elastic.example.repo.Tag;
 import com.goetschalckx.elastic.example.repo.TagRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

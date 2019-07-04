@@ -1,7 +1,6 @@
-package com.goetschalckx.elastic.example.repo;
+package com.goetschalckx.elastic.example.recipe;
 
-import com.goetschalckx.elastic.example.data.Recipe;
-import org.springframework.data.elasticsearch.annotations.Query;
+import com.goetschalckx.elastic.example.recipe.Recipe;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 import org.springframework.stereotype.Repository;
 

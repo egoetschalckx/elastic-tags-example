@@ -1,4 +1,4 @@
-package com.goetschalckx.elastic.example.data;
+package com.goetschalckx.elastic.example.recipe;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
