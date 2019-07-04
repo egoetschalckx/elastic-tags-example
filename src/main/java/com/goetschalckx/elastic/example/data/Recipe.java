@@ -13,15 +13,19 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder(toBuilder = true)
-@Document(indexName = "site", type = "sites")
-public class Site {
+@Document(indexName = "recipe", type = "recipe")
+public class Recipe {
 
     @Id
+    @Field(type = FieldType.Keyword)
     private String id;
+
+    //@Field(type = FieldType.Keyword)
+    //private String org;
 
     private String name;
 
-    @Field(type = FieldType.Keyword, analyzer = "keyword")
-    private String[] groups;
+    //@Field(type = FieldType.Text, analyzer = "keyword")
+    private String[] tags;
 
 }

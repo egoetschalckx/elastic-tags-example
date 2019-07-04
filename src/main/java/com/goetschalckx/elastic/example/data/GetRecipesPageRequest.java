@@ -1,11 +1,8 @@
 package com.goetschalckx.elastic.example.data;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.domain.AbstractPageRequest;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 
 import javax.validation.constraints.Min;
@@ -14,17 +11,17 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder(toBuilder = true)
-public class GetSitesPageRequest {
+public class GetRecipesPageRequest {
 
     @Min(0)
-    int page;
+    private int pageNum;
 
     @Min(1)
-    int size;
+    private int pageSize;
 
-    Sort sort;
+    private Sort sort;
 
-    List<String> groups;
+    private List<String> tags;
+    private List<String> tagsExact;
 
 }

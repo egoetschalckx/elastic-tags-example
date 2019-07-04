@@ -1,13 +1,10 @@
 package com.goetschalckx.elastic.example;
 
 
-import com.goetschalckx.elastic.example.data.Site;
-import com.goetschalckx.elastic.example.repo.SiteRepository;
 import org.springframework.boot.Banner;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.Bean;
-import org.springframework.data.domain.Page;
 import org.springframework.data.elasticsearch.repository.config.EnableElasticsearchRepositories;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -20,7 +17,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableSwagger2
 public class Application {
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         new SpringApplicationBuilder(Application.class)
                 .bannerMode(Banner.Mode.OFF)
                 .build()

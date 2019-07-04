@@ -1,8 +1,7 @@
 package com.goetschalckx.elastic.example;
 
-import com.github.javafaker.Faker;
-import com.goetschalckx.elastic.example.data.Group;
-import com.goetschalckx.elastic.example.repo.GroupRepository;
+import com.goetschalckx.elastic.example.data.Tag;
+import com.goetschalckx.elastic.example.repo.TagRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
@@ -15,35 +14,35 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("groups")
-public class GroupController {
+@RequestMapping("tags")
+public class TagController {
 
-    private final GroupRepository groupRepository;
+    private final TagRepository tagRepository;
 
-    public GroupController(
-            GroupRepository groupRepository
+    public TagController(
+            TagRepository tagRepository
     ) {
-        this.groupRepository = groupRepository;
+        this.tagRepository = tagRepository;
     }
 
     @PostMapping
-    public Group create(Group group) {
-        return groupRepository.save(group);
+    public Tag create(Tag tag) {
+        return tagRepository.save(tag);
     }
 
     @GetMapping("{name}")
-    public ResponseEntity<Group> get(
+    public ResponseEntity<Tag> get(
             @PathVariable String name
     ) {
-        Optional<Group> optionalGroup = groupRepository.findById(name);
+        Optional<Tag> optionalGroup = tagRepository.findById(name);
         return optionalGroup
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @GetMapping()
-    public Page<Group> get(PageRequest pageRequest) {
-        return groupRepository.findAll(pageRequest);
+    @GetMapping
+    public Page<Tag> get(PageRequest pageRequest) {
+        return tagRepository.findAll(pageRequest);
     }
 
 }
