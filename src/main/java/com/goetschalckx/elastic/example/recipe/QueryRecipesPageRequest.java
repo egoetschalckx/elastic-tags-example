@@ -4,18 +4,16 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.springframework.data.domain.Sort;
 
-import javax.validation.constraints.Min;
-import java.util.List;
+import javax.validation.constraints.Size;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class GetRecipesPageRequest extends PageRequest {
+public class QueryRecipesPageRequest extends PageRequest {
 
-    private List<String> tags;
-    private List<String> tagsExact;
+    @Size(min = 1, max = 2048)
+    private String query;
 
 }

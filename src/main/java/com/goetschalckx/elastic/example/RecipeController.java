@@ -7,9 +7,14 @@ import com.goetschalckx.elastic.example.data.CountTagsResponse;
 import com.goetschalckx.elastic.example.recipe.GetRecipesPageRequest;
 import com.goetschalckx.elastic.example.recipe.GetRecipesPageResponse;
 import com.goetschalckx.elastic.example.data.GetTagCountRequest;
+import com.goetschalckx.elastic.example.recipe.QueryRecipesPageRequest;
 import com.goetschalckx.elastic.example.recipe.Recipe;
 import com.goetschalckx.elastic.example.recipe.RecipeRepository;
+import com.goetschalckx.rsql.elastic.ElasticComparisonNodeInterpreter;
+import com.goetschalckx.rsql.elastic.ElasticVisitor;
 import com.google.common.base.Strings;
+import cz.jirutka.rsql.parser.RSQLParser;
+import cz.jirutka.rsql.parser.ast.Node;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.update.UpdateRequest;
@@ -344,6 +349,32 @@ public class RecipeController {
         return CountTagsResponse.builder()
                 .counts(Collections.singletonMap(tagName, count))
                 .build();
+    }
+
+    @GetMapping("query")
+    public GetRecipesPageResponse queryRecipes(QueryRecipesPageRequest request) {
+        Sort.Order order = new Sort.Order(Sort.Direction.ASC, "name.keyword");
+        Sort sort = Sort.by(order);
+        PageRequest pageRequest = PageRequest.of(
+                request.getPageNum(),
+                request.getPageSize(),
+                sort);
+
+        RSQLParser rsqlParser = new RSQLParser();
+        ElasticComparisonNodeInterpreter interpreter = new ElasticComparisonNodeInterpreter();
+        ElasticVisitor elasticVisitor = new ElasticVisitor(interpreter);
+
+        Node rootNode = rsqlParser.parse(request.getQuery());
+        QueryBuilder queryBuilder = rootNode.accept(elasticVisitor);
+
+        BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
+        // multi tenancy here
+        //boolQueryBuilder.must(QueryBuilders.termQuery("org.keyword", "my-org"));
+
+        boolQueryBuilder.must(queryBuilder);
+
+        Page<Recipe> search = recipeRepository.search(boolQueryBuilder, pageRequest);
+        return fromPage(search);
     }
 
     private BucketOrder getBucketOrder(GetTagCountRequest request) {
