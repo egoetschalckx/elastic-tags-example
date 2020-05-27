@@ -1,8 +1,9 @@
 # Logging Properties
 logging:
-  web:
-    enabled: true
-    include-body: true
+  server:
+    web:
+      enabled: true
+      include-body: true
 
   level:
     root: info
@@ -11,8 +12,15 @@ logging:
     com.ncr.tdm.search: info
     com.goetschalckx.spring.http.logging: debug
 
+  json:
+    pretty-print: true
+
 # Spring Properties
 spring:
+  profiles:
+    active:
+      log-dev
+
   data:
     elasticsearch:
       cluster-name: elasticsearch

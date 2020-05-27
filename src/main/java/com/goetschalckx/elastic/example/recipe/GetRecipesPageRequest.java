@@ -13,15 +13,17 @@ import java.util.List;
 @NoArgsConstructor
 public class GetRecipesPageRequest {
 
-    @Min(0)
-    private int pageNum;
+    @Min(1)
+    private int pageNum = 1;
 
     @Min(1)
-    private int pageSize;
+    private int pageSize = 10;
 
     private Sort sort;
 
     private List<String> tags;
     private List<String> tagsExact;
+
+    private String query;
 
 }

@@ -1,8 +1,7 @@
 plugins {
     id 'java'
-    //id 'com.gradle.build-scan' version '2.0.2'
-    id 'org.springframework.boot' version '2.1.6.RELEASE'
-    id 'io.spring.dependency-management' version '1.0.7.RELEASE'
+    id 'org.springframework.boot' version '2.3.0.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.9.RELEASE'
 }
 
 sourceCompatibility = 1.8
@@ -10,15 +9,29 @@ sourceCompatibility = 1.8
 repositories {
     mavenCentral()
     mavenLocal()
+
+    maven {
+        url "https://oss.sonatype.org/content/repositories/snapshots"
+    }
 }
 
 dependencies {
-    implementation 'net.logstash.logback:logstash-logback-encoder:4.11'
-    implementation 'org.projectlombok:lombok:1.18.8'
-    //implementation 'com.github.javafaker:javafaker:0.18'
-    implementation 'com.github.javafaker:javafaker:0.19-SNAPSHOT'
+    implementation 'net.logstash.logback:logstash-logback-encoder:6.3'
 
-    implementation 'org.springframework.boot:spring-boot-dependencies:2.0.5.RELEASE'
+    implementation 'org.projectlombok:lombok:1.18.8'
+    annotationProcessor 'org.projectlombok:lombok:1.18.8'
+
+    implementation 'com.github.javafaker:javafaker:1.0.2'
+
+    implementation "cz.jirutka.rsql:rsql-parser:2.1.0"
+
+    implementation 'javax.validation:validation-api:2.0.1.Final'
+
+    implementation 'io.github.goetschalckx:spring-boot-logging-json:0.1.1'
+    implementation 'io.github.goetschalckx:spring-boot-logging-web:0.1.0-SNAPSHOT'
+    implementation 'io.github.goetschalckx:rsql-elastic:0.1.0-SNAPSHOT'
+
+    //implementation 'org.springframework.boot:spring-boot-dependencies:2.0.5.RELEASE'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-data-elasticsearch'
     implementation 'org.springframework.boot:spring-boot-starter-logging'

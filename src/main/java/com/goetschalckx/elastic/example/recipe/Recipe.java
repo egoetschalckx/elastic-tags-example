@@ -16,26 +16,23 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder(toBuilder = true)
-@Document(indexName = "recipe", type = "recipe")
+@Document(indexName = "recipe")
 public class Recipe {
 
     @Id
     @Field(type = FieldType.Keyword)
     private String id;
 
-    //@Field(type = FieldType.Keyword)
-    //private String org;
-
+    @Field(type = FieldType.Keyword)
     private String name;
 
-    //@Field(type = FieldType.Text, analyzer = "keyword")
+    @Field(type = FieldType.Keyword)
     private String[] tags;
 
-    //@Field(type = FieldType.Date)
-    //private OffsetDateTime dateCreated;
-    //private Date dateCreated;
+    @Field(type = FieldType.Date)
+    private Date dateCreated;
 
-    //@Field(type = FieldType.Date)
-    //private Date dateUpdated;
+    @Field(type = FieldType.Date)
+    private Date dateUpdated;
 
 }

@@ -13,13 +13,12 @@ import java.util.List;
 public class GetTagCountRequest {
 
     @Min(1)
-    int size = 10;
+    private int size = 10;
 
-    CountSort sort = CountSort.count;
+    private CountSort sort = CountSort.count;
 
-    boolean asc = true;
+    private boolean asc = true;
 
-    List<String> tags;
-    List<String> tagsExact;
+    private String query;
 
 }
